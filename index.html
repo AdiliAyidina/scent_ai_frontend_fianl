@@ -234,7 +234,7 @@ function payload(){
 
 /* ↓↓↓ 上线时把这里改成你的 Render 后端地址(https), 例如 "https://scentai-api.onrender.com" ↓↓↓
    留空 = 用下面的示例数据; 填了 = 调用真实后端 */
-const API_BASE = "https://scentai-backend.onrender.com/";
+const API_BASE = "https://scentai-backend.onrender.com";
 
 async function recommend(p){
   const r=await fetch(API_BASE+"/recommend_split",{
