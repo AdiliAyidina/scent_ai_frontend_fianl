@@ -9,27 +9,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void:#000000;
-    --paper:#EDE9E3;
-    --dim:#7C776E;
-    --line:#26241F;
-    --gold:#B8975A;
-    --serif:"Cormorant Garamond", Georgia, serif;
-    --sans:"Inter", system-ui, sans-serif;
+    --void:#000000; --paper:#EDE9E3; --dim:#7C776E; --line:#26241F; --gold:#B8975A;
+    --serif:"Cormorant Garamond", Georgia, serif; --sans:"Inter", system-ui, sans-serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{-webkit-font-smoothing:antialiased}
-  body{
-    background:var(--void);color:var(--paper);
-    font-family:var(--sans);font-weight:300;
-    line-height:1.6;letter-spacing:.01em;
-    padding:0 clamp(20px,6vw,120px);
-    overflow-x:hidden;-webkit-tap-highlight-color:transparent;
-    -webkit-text-size-adjust:100%;
-  }
+  body{background:var(--void);color:var(--paper);font-family:var(--sans);font-weight:300;
+    line-height:1.6;letter-spacing:.01em;padding:0 clamp(20px,6vw,120px);
+    overflow-x:hidden;-webkit-tap-highlight-color:transparent;-webkit-text-size-adjust:100%}
   h1,.card .name{overflow-wrap:break-word}
   .label{font-size:11px;font-weight:400;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
-  .hair{border:0;border-top:1px solid var(--line);margin:0}
 
   header{min-height:92vh;min-height:92dvh;display:flex;flex-direction:column;justify-content:center;max-width:900px}
   .eyebrow{margin-bottom:38px}
@@ -52,36 +41,30 @@
   .field .q{font-family:var(--serif);font-size:23px;font-weight:400}
   .field .q .sub{display:block;font-family:var(--sans);font-size:12px;color:var(--dim);margin-top:6px;letter-spacing:.02em}
   .controls{display:flex;flex-wrap:wrap;gap:10px}
-  textarea{background:transparent;color:var(--paper);border:1px solid var(--line);
-    font-family:var(--sans);font-size:16px;font-weight:300;padding:11px 14px;border-radius:0;min-width:150px}
-  textarea:focus{outline:none;border-color:var(--paper)}
-
-  /* ===== 自定义下拉 (替代原生 select, 样式 100% 可控) ===== */
-  .sel{position:relative;min-width:170px}
-  .sel-btn{width:100%;display:flex;align-items:center;justify-content:space-between;gap:14px;
-    background:transparent;color:var(--paper);border:1px solid var(--line);cursor:pointer;text-align:left;
-    font-family:var(--serif);font-size:19px;font-weight:400;padding:10px 14px;transition:border-color .3s}
-  .sel-btn:hover{border-color:#4A463E}
-  .sel.open .sel-btn,.sel-btn:focus-visible{outline:none;border-color:var(--paper)}
-  .sel-caret{flex:none;width:8px;height:8px;margin-top:-3px;transform:rotate(45deg);
-    border-right:1px solid var(--dim);border-bottom:1px solid var(--dim);transition:transform .3s,border-color .3s}
-  .sel.open .sel-caret{transform:rotate(-135deg);margin-top:3px;border-color:var(--paper)}
-  .sel-list{position:absolute;top:calc(100% + 6px);left:0;right:0;z-index:50;list-style:none;margin:0;padding:6px;
-    background:#14120E;border:1px solid var(--line);max-height:288px;overflow-y:auto;
-    opacity:0;transform:translateY(-6px);pointer-events:none;
-    transition:opacity .22s ease,transform .22s ease;box-shadow:0 24px 60px rgba(0,0,0,.6)}
-  .sel.open .sel-list{opacity:1;transform:none;pointer-events:auto}
-  .sel-opt{font-family:var(--serif);font-size:18px;color:#B9B4AB;padding:9px 12px;cursor:pointer;
-    transition:color .15s,background .15s}
-  .sel-opt:hover,.sel-opt.active{color:var(--paper);background:rgba(184,151,90,.10)}
-  .sel-opt[aria-selected="true"]{color:var(--gold)}
-  .sel-list::-webkit-scrollbar{width:8px}
-  .sel-list::-webkit-scrollbar-thumb{background:var(--line)}
-  textarea{width:100%;min-height:96px;resize:vertical;line-height:1.7}
+  select,textarea{background:transparent;color:var(--paper);border:1px solid var(--line);
+    font-size:16px;font-weight:300;padding:11px 14px;border-radius:0;min-width:150px}
+  /* 下拉: 统一为衬线字体 + 深色原生弹窗(修 Windows 白底) */
+  select{font-family:var(--serif);font-size:19px;color:var(--paper);color-scheme:dark}
+  textarea{font-family:var(--sans)}
+  select:focus,textarea:focus{outline:none;border-color:var(--paper)}
+  select:disabled{opacity:.4}
+  /* 展开后的选项列表: 深底 + 浅字, 选中项描金 (Chrome/Windows 生效) */
+  select option{background-color:#14120E;color:var(--paper);font-family:var(--serif)}
+  select option:checked{color:var(--gold)}
   .chip{background:transparent;color:var(--dim);border:1px solid var(--line);padding:9px 16px;
         font-size:12px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;
         transition:color .3s,border-color .3s,background .3s;font-family:var(--sans)}
   .chip[aria-pressed="true"]{color:var(--void);background:var(--paper);border-color:var(--paper)}
+  .add-btn{color:var(--paper);border-color:var(--paper)}
+  /* 已购买: 下拉选择 + 收藏chips */
+  .owned-picker{display:flex;gap:10px;flex-wrap:wrap;width:100%}
+  .owned-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;width:100%}
+  .owned-chips:empty::before{content:"Nothing added yet.";color:var(--dim);font-style:italic;font-family:var(--serif);font-size:15px}
+  .owned-tag{display:inline-flex;align-items:center;gap:9px;border:1px solid var(--line);
+             padding:8px 12px;font-size:13px;color:var(--paper)}
+  .owned-tag b{font-weight:500}
+  .owned-tag .x{cursor:pointer;color:var(--dim);font-size:15px;line-height:1}
+  .owned-tag .x:hover{color:var(--paper)}
   .weight{display:flex;align-items:center;gap:16px;width:100%}
   input[type=range]{flex:1;accent-color:var(--paper);background:transparent}
   .weight .val{font-family:var(--serif);font-size:22px;min-width:2.4ch;text-align:right}
@@ -92,7 +75,11 @@
 
   #results{max-width:1100px;margin:0 auto;padding-bottom:140px;display:none}
   .results-head{font-family:var(--serif);font-style:italic;font-size:clamp(28px,5vw,46px);font-weight:300;margin-bottom:8px}
-  .results-sub{color:var(--dim);font-size:13px;letter-spacing:.04em;margin-bottom:70px}
+  .results-sub{color:var(--dim);font-size:13px;letter-spacing:.04em;margin-bottom:46px}
+  /* NLP 场景描述 */
+  .reading-text{font-family:var(--serif);font-weight:300;font-size:clamp(20px,2.4vw,27px);
+    line-height:1.5;color:#D8D3CB;max-width:60ch;margin:0 auto 74px;
+    padding:38px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
   .cols{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,6vw,90px)}
   .col > .label{margin-bottom:6px}
   .col > .col-note{color:#A6A199;font-style:italic;font-family:var(--serif);font-size:16px;margin-bottom:34px}
@@ -116,30 +103,23 @@
     header{min-height:88vh;min-height:88dvh}
     h1{font-size:clamp(46px,13vw,74px)}
     .lede{font-size:20px;max-width:100%}
-    .enter{margin-top:44px;padding:8px 0}      /* 更大的可点区域 */
+    .enter{margin-top:44px;padding:8px 0}
     .reading{padding:64px 0 32px}
     .reading > .label{margin-bottom:40px}
     .field{grid-template-columns:1fr;gap:16px;padding:24px 0}
     .field .q{font-size:22px}
     .controls{width:100%}
-    textarea{width:100%;min-width:0;padding:14px}            /* 全宽, 触摸友好 */
-    .sel{width:100%;min-width:0}
-    .sel-btn{padding:14px}
-    .chip{padding:13px 18px}                                 /* ≈44px 触摸目标 */
+    select,textarea{width:100%;min-width:0;padding:14px}
+    .chip{padding:13px 18px}
     .weight{flex-wrap:wrap;gap:12px}
-    .weight input[type=range]{flex:1 1 100%;height:26px}     /* 滑块独占一行, 好拖动 */
+    .weight input[type=range]{flex:1 1 100%;height:26px}
     .reveal-btn{width:100%;text-align:center;margin:44px 0 90px;padding:22px}
-    .cols{grid-template-columns:1fr;gap:48px}                /* 两栏改上下堆叠 */
+    .reading-text{font-size:20px;margin-bottom:56px}
+    .cols{grid-template-columns:1fr;gap:48px}
     .card .name{font-size:26px}
-    .results-sub{margin-bottom:48px}
     footer{flex-direction:column;gap:10px}
   }
-  /* 超窄屏 (<380px) 再收一档 */
-  @media(max-width:380px){
-    body{padding:0 18px}
-    h1{font-size:clamp(40px,12.5vw,60px)}
-    .field .q{font-size:20px}
-  }
+  @media(max-width:380px){body{padding:0 18px}h1{font-size:clamp(40px,12.5vw,60px)}.field .q{font-size:20px}}
   @media(prefers-reduced-motion:reduce){.rise{animation:none}.enter .bar{transition:none}}
 </style>
 </head>
@@ -159,19 +139,24 @@
 
   <div class="field">
     <div class="q">Your type<span class="sub">MBTI</span></div>
-    <div class="controls"><div class="sel" id="mbti"></div></div>
+    <div class="controls"><select id="mbti"></select></div>
   </div>
   <div class="field">
     <div class="q">Your sign<span class="sub">Zodiac</span></div>
-    <div class="controls"><div class="sel" id="zodiac"></div></div>
+    <div class="controls"><select id="zodiac"></select></div>
   </div>
   <div class="field">
     <div class="q">Where you're going<span class="sub">Scene</span></div>
-    <div class="controls"><div class="sel" id="scene"></div></div>
+    <div class="controls"><select id="scene">
+      <option value="date">a date</option><option value="work">work</option>
+      <option value="home">at home</option><option value="travel">travel</option>
+      <option value="dining">dining out</option></select></div>
   </div>
   <div class="field">
     <div class="q">How you feel<span class="sub">Mood</span></div>
-    <div class="controls"><div class="sel" id="mood"></div></div>
+    <div class="controls"><select id="mood">
+      <option value="confident">confident</option><option value="calm">calm</option>
+      <option value="uplifted">uplifted</option><option value="comforted">comforted</option></select></div>
   </div>
   <div class="field">
     <div class="q">Made for<span class="sub">Gender</span></div>
@@ -182,19 +167,31 @@
       <button class="chip" data-g="unisex" aria-pressed="false">unisex</button>
     </div>
   </div>
+
+  <!-- (2) 措辞去掉消费水平暗示 -->
   <div class="field">
-    <div class="q">What you'll spend<span class="sub">Tier &mdash; pick any</span></div>
+    <div class="q">Which worlds to explore<span class="sub">pick any &mdash; there's no wrong answer</span></div>
     <div class="controls" id="tiers">
-      <button class="chip" data-t="commercial" aria-pressed="true">commercial</button>
-      <button class="chip" data-t="premium" aria-pressed="true">premium</button>
-      <button class="chip" data-t="niche" aria-pressed="true">niche</button>
-      <button class="chip" data-t="ultra niche" aria-pressed="true">ultra niche</button>
+      <button class="chip" data-t="commercial" aria-pressed="true">Everyday</button>
+      <button class="chip" data-t="premium" aria-pressed="true">Designer</button>
+      <button class="chip" data-t="niche" aria-pressed="true">Niche</button>
+      <button class="chip" data-t="ultra niche" aria-pressed="true">Rare finds</button>
     </div>
   </div>
+
+  <!-- (1) 手动输入 -> 品牌+名称下拉 -->
   <div class="field">
-    <div class="q">What you already own<span class="sub">One per line &mdash; brand + name</span></div>
-    <div class="controls"><textarea id="owned" placeholder="Dior Sauvage&#10;Bleu de Chanel&#10;Tom Ford Oud Wood"></textarea></div>
+    <div class="q">What you already own<span class="sub">choose brand &rarr; scent &rarr; add</span></div>
+    <div class="controls" style="flex-direction:column;align-items:stretch">
+      <div class="owned-picker">
+        <select id="ownBrand"><option value="">Brand&hellip;</option></select>
+        <select id="ownName" disabled><option value="">Scent&hellip;</option></select>
+        <button class="chip add-btn" id="addOwn" type="button">+ Add</button>
+      </div>
+      <div class="owned-chips" id="ownedChips"></div>
+    </div>
   </div>
+
   <div class="field">
     <div class="q">Whose taste to trust<span class="sub">your type &amp; sign vs. what you own</span></div>
     <div class="controls weight">
@@ -211,6 +208,7 @@
 <section id="results">
   <div class="results-head" id="rhead">Your reading</div>
   <div class="results-sub" id="rsub"></div>
+  <div class="reading-text rise" id="readingText"></div>
   <div class="cols">
     <div class="col">
       <div class="label">From your collection</div>
@@ -231,54 +229,57 @@
 </footer>
 
 <script>
+/* ↓↓↓ 改成你的 Render 后端地址(https, 末尾不要斜杠也没关系, 会自动去掉) ↓↓↓
+   留空 = 用示例数据 */
+const API_BASE = "https://scentai-backend.onrender.com".replace(/\/+$/,"");
+
 const MBTI=["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ","ESTJ","ESFJ","ISTP","ISFP","ESTP","ESFP"];
 const ZOD=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
-// —— 自定义下拉: 定义 + 初始化 (替代原来两行 innerHTML) ——
-function makeSelect(id, options, initial){
-  const root=document.getElementById(id); root.classList.add("sel");
-  const opts=options.map(o=> typeof o==="string" ? {value:o,label:o} : o);
-  let current = initial ?? opts[0].value;
-  root.innerHTML=`<button type="button" class="sel-btn" aria-haspopup="listbox" aria-expanded="false">`+
-    `<span class="sel-val"></span><span class="sel-caret" aria-hidden="true"></span></button>`+
-    `<ul class="sel-list" role="listbox" tabindex="-1"></ul>`;
-  const btn=root.querySelector(".sel-btn"), valEl=root.querySelector(".sel-val"), list=root.querySelector(".sel-list");
-  const labelOf=v=>(opts.find(o=>o.value===v)||opts[0]).label;
-  function render(){
-    valEl.textContent=labelOf(current);
-    list.innerHTML=opts.map(o=>`<li class="sel-opt" role="option" data-value="${o.value}"`+
-      (o.value===current?' aria-selected="true"':"")+`>${o.label}</li>`).join("");
-  }
-  render();
-  // 关键: 暴露 .value 读写, 让 payload()/其余代码 完全不用改
-  Object.defineProperty(root,"value",{get:()=>current,set:v=>{current=v;render();},configurable:true});
-  let open=false, active=-1;
-  const highlight=()=>{[...list.children].forEach((li,i)=>li.classList.toggle("active",i===active));
-    if(active>=0) list.children[active].scrollIntoView({block:"nearest"});};
-  function openList(){open=true;root.classList.add("open");btn.setAttribute("aria-expanded","true");
-    active=opts.findIndex(o=>o.value===current);highlight();list.focus();
-    document.addEventListener("click",outside,true);}
-  function closeList(){open=false;root.classList.remove("open");btn.setAttribute("aria-expanded","false");
-    document.removeEventListener("click",outside,true);btn.focus();}
-  function outside(e){ if(!root.contains(e.target)) closeList(); }
-  function choose(v){current=v;render();root.dispatchEvent(new Event("change",{bubbles:true}));closeList();}
-  btn.addEventListener("click",()=> open?closeList():openList());
-  list.addEventListener("click",e=>{const li=e.target.closest(".sel-opt"); if(li) choose(li.dataset.value);});
-  root.addEventListener("keydown",e=>{
-    if(!open){ if(["Enter"," ","ArrowDown","ArrowUp"].includes(e.key)){e.preventDefault();openList();} return; }
-    if(e.key==="Escape"){e.preventDefault();closeList();}
-    else if(e.key==="ArrowDown"){e.preventDefault();active=Math.min(opts.length-1,active+1);highlight();}
-    else if(e.key==="ArrowUp"){e.preventDefault();active=Math.max(0,active-1);highlight();}
-    else if(e.key==="Enter"||e.key===" "){e.preventDefault(); if(active>=0) choose(opts[active].value);}
-  });
-  return root;
-}
-makeSelect("mbti", MBTI, "INFP");
-makeSelect("zodiac", ZOD, "Libra");
-makeSelect("scene",[{value:"date",label:"a date"},{value:"work",label:"work"},
-  {value:"home",label:"at home"},{value:"travel",label:"travel"},{value:"dining",label:"dining out"}],"date");
-makeSelect("mood",[{value:"confident",label:"confident"},{value:"calm",label:"calm"},
-  {value:"uplifted",label:"uplifted"},{value:"comforted",label:"comforted"}],"confident");
+mbti.innerHTML=MBTI.map(m=>`<option>${m}</option>`).join(""); mbti.value="INFP";
+zodiac.innerHTML=ZOD.map(z=>`<option>${z}</option>`).join(""); zodiac.value="Libra";
 
+/* ---------- 目录(品牌->香水名), 供下拉框 ---------- */
+let CATALOG={};
+const SAMPLE_CATALOG={
+  "Dior":["Sauvage","Homme Intense"],"Chanel":["Bleu de Chanel","Coco Mademoiselle"],
+  "Tom Ford":["Oud Wood","Tobacco Vanille"],"Creed":["Aventus","Silver Mountain Water"],
+  "Le Labo":["Santal 33","Rose 31"],"Byredo":["Gypsy Water","Mojave Ghost"]
+};
+async function loadCatalog(){
+  if(API_BASE){
+    try{ const r=await fetch(API_BASE+"/catalog"); if(r.ok) CATALOG=await r.json(); }
+    catch(e){ console.warn("catalog 加载失败, 用示例:",e); }
+  }
+  if(!Object.keys(CATALOG).length) CATALOG=SAMPLE_CATALOG;
+  const brands=Object.keys(CATALOG).sort();
+  ownBrand.innerHTML='<option value="">Brand\u2026</option>'+brands.map(b=>`<option>${b}</option>`).join("");
+}
+ownBrand.addEventListener("change",()=>{
+  const names=CATALOG[ownBrand.value]||[];
+  if(names.length){
+    ownName.innerHTML='<option value="">Scent\u2026</option>'+names.map(n=>`<option>${n}</option>`).join("");
+    ownName.disabled=false;
+  } else { ownName.innerHTML='<option value="">Scent\u2026</option>'; ownName.disabled=true; }
+});
+
+/* ---------- 已购买收藏 ---------- */
+let owned=[];   // [{brand,name}]
+function renderOwned(){
+  ownedChips.innerHTML=owned.map((o,i)=>
+    `<span class="owned-tag"><span><b>${o.name}</b> &middot; ${o.brand}</span><span class="x" data-i="${i}">&times;</span></span>`).join("");
+}
+addOwn.addEventListener("click",()=>{
+  const b=ownBrand.value, n=ownName.value;
+  if(!b||!n) return;
+  if(!owned.some(o=>o.brand===b&&o.name===n)) owned.push({brand:b,name:n});
+  renderOwned(); ownName.value="";
+});
+ownedChips.addEventListener("click",e=>{
+  const x=e.target.closest(".x"); if(!x) return;
+  owned.splice(+x.dataset.i,1); renderOwned();
+});
+
+/* ---------- chip 交互 ---------- */
 gender.addEventListener("click",e=>{const b=e.target.closest(".chip");if(!b)return;
   [...gender.children].forEach(c=>c.setAttribute("aria-pressed","false"));
   b.setAttribute("aria-pressed","true");gender.dataset.value=b.dataset.g;});
@@ -290,19 +291,18 @@ function payload(){
   const t=[...tiers.children].filter(c=>c.getAttribute("aria-pressed")==="true").map(c=>c.dataset.t);
   return {mbti:mbti.value,zodiac:zodiac.value,scene:scene.value,mood:mood.value,
     gender:gender.dataset.value,tiers:t,
-    purchased:owned.value.split("\n").map(s=>s.trim()).filter(Boolean),
+    purchased:owned.map(o=>o.brand+" "+o.name),
     purchase_w:parseFloat(pw.value),topn:6};
 }
 
-============ 真实后端 (上线启用, 删掉 mock 那行改用这个) ============
 async function recommend(p){
-  const r=await fetch("https://scentai-api.onrender.com",{
+  const r=await fetch(API_BASE+"/recommend_split",{
     method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)});
-  return await r.json();     // {owned:[...], new:[...]}
+  if(!r.ok) throw new Error("API "+r.status);
+  return await r.json();
 }
-====================================================================
 
-/* 演示假数据: 打开即可预览; 上线换成 await recommend(p) */
+/* ---------- 示例数据(无后端时) ---------- */
 const SAMPLE=[
   {Name:"Oud Wood",Brand:"Tom Ford",tier:"premium",accords:"woody \u00B7 smoky \u00B7 aromatic",match:.91},
   {Name:"Bleu de Chanel",Brand:"Chanel",tier:"premium",accords:"woody \u00B7 citrus \u00B7 amber",match:.88},
@@ -312,37 +312,44 @@ const SAMPLE=[
   {Name:"Sultanate of Oman",Brand:"Roja Dove",tier:"ultra niche",accords:"woody \u00B7 oud \u00B7 saffron",match:.90},
   {Name:"Alexandria II",Brand:"Xerjoff",tier:"ultra niche",accords:"amber \u00B7 woody \u00B7 honey",match:.89},
   {Name:"Santal 33",Brand:"Le Labo",tier:"niche",accords:"woody \u00B7 leather \u00B7 iris",match:.87},
-  {Name:"La Selle",Brand:"Byredo",tier:"niche",accords:"leather \u00B7 woody \u00B7 violet",match:.85},
 ];
+function mockDesc(p){
+  return `For ${p.scene}, feeling ${p.mood}, a ${p.mbti} under ${p.zodiac} reaches for scent as a signature. `
+    +`The reading leans into warm, woody depth lit with a little spice \u2014 close to the skin, and unmistakably yours.`;
+}
 function mock(p){
-  const owned=SAMPLE.slice(0,4).map(x=>({...x}));
-  const pool=SAMPLE.slice(4).filter(x=>!p.tiers.length||p.tiers.includes(x.tier));
-  return {owned, new:pool};
+  const pool=SAMPLE.filter(x=>!p.tiers.length||p.tiers.includes(x.tier));
+  return {owned:SAMPLE.slice(0,3), new:pool.slice(0,5), description:mockDesc(p)};
 }
 
 function card(x,mode){
-  const val = mode==="fit" ? "suits this" : (Math.round(x.match*100)+"% match");
+  const val = mode==="fit" ? "suits this" : (Math.round((x.match||0)*100)+"% match");
   return `<div class="card rise">
-    <div class="name">${x.Name}</div>
-    <div class="brand">${x.Brand}</div>
+    <div class="name">${x.Name}</div><div class="brand">${x.Brand}</div>
     <div class="accords">${x.accords||""}</div>
-    <div class="meta"><span class="tier">${x.tier}</span><span class="match">${val}</span></div>
-  </div>`;
+    <div class="meta"><span class="tier">${x.tier}</span><span class="match">${val}</span></div></div>`;
 }
 async function run(){
   const p=payload();
-  const data = await recommend(p);
-  ownedList.innerHTML = data.owned.length
+  const btn=document.querySelector(".reveal-btn"); const orig=btn.textContent;
+  btn.textContent="Reading\u2026"; btn.disabled=true;
+  let data;
+  try{ data = API_BASE ? await recommend(p) : mock(p); }
+  catch(e){ console.warn("后端未连上, 暂用示例数据:", e); data = mock(p); }
+  btn.textContent=orig; btn.disabled=false;
+  readingText.textContent = data.description || "";
+  ownedList.innerHTML = (data.owned&&data.owned.length)
      ? data.owned.map(x=>card(x,"fit")).join("")
      : `<div class="empty">You haven't added anything you own yet.</div>`;
-  newList.innerHTML = data.new.length
+  newList.innerHTML = (data.new&&data.new.length)
      ? data.new.map(x=>card(x,"match")).join("")
-     : `<div class="empty">Widen your tier or gender to see more.</div>`;
+     : `<div class="empty">Widen your selection to see more.</div>`;
   rsub.textContent = `${p.mbti} \u00B7 ${p.zodiac} \u00B7 ${p.scene} \u00B7 feeling ${p.mood}`;
   const res=document.getElementById("results");
-  res.style.display="block";
-  res.scrollIntoView({behavior:"smooth"});
+  res.style.display="block"; res.scrollIntoView({behavior:"smooth"});
 }
+
+loadCatalog();   /* 页面加载即拉取品牌目录 */
 </script>
 </body>
 </html>
