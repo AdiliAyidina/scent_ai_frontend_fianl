@@ -148,15 +148,27 @@
   <div class="field">
     <div class="q">Where you're going<span class="sub">Scene</span></div>
     <div class="controls"><select id="scene">
-      <option value="date">a date</option><option value="work">work</option>
-      <option value="home">at home</option><option value="travel">travel</option>
-      <option value="dining">dining out</option></select></div>
+      <optgroup label="Day">
+        <option value="work">work</option><option value="study">studying</option>
+        <option value="brunch">brunch</option><option value="shopping">shopping</option>
+        <option value="gym">the gym</option><option value="travel">travel</option>
+      </optgroup>
+      <optgroup label="Evening">
+        <option value="date">a date</option><option value="dining">dining out</option>
+        <option value="girls_night">girls' night</option><option value="boys_night">boys' night</option>
+      </optgroup>
+      <optgroup label="Slow hours">
+        <option value="home">at home</option><option value="reading">reading</option>
+      </optgroup></select></div>
   </div>
   <div class="field">
     <div class="q">How you feel<span class="sub">Mood</span></div>
     <div class="controls"><select id="mood">
       <option value="confident">confident</option><option value="calm">calm</option>
-      <option value="uplifted">uplifted</option><option value="comforted">comforted</option></select></div>
+      <option value="uplifted">uplifted</option><option value="comforted">comforted</option>
+      <option value="romantic">romantic</option><option value="playful">playful</option>
+      <option value="energized">energized</option><option value="focused">focused</option>
+      <option value="mysterious">mysterious</option><option value="sensual">sensual</option></select></div>
   </div>
   <div class="field">
     <div class="q">Made for<span class="sub">Gender</span></div>
@@ -225,7 +237,7 @@
 
 <footer>
   <span>Scent &mdash; a reading</span>
-  <span>Content-based &middot; 11,944 fragrances</span>
+  <span>Content-based &middot; <span id="prodCount">13,900+</span> fragrances</span>
 </footer>
 
 <script>
@@ -237,6 +249,7 @@ const MBTI=["INTJ","INTP","ENTJ","ENTP","INFJ","INFP","ENFJ","ENFP","ISTJ","ISFJ
 const ZOD=["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"];
 mbti.innerHTML=MBTI.map(m=>`<option>${m}</option>`).join(""); mbti.value="INFP";
 zodiac.innerHTML=ZOD.map(z=>`<option>${z}</option>`).join(""); zodiac.value="Libra";
+scene.value="date";
 
 /* ---------- 目录(品牌->香水名), 供下拉框 ---------- */
 let CATALOG={};
@@ -313,8 +326,10 @@ const SAMPLE=[
   {Name:"Alexandria II",Brand:"Xerjoff",tier:"ultra niche",accords:"amber \u00B7 woody \u00B7 honey",match:.89},
   {Name:"Santal 33",Brand:"Le Labo",tier:"niche",accords:"woody \u00B7 leather \u00B7 iris",match:.87},
 ];
+/* 下拉框里显示的文字 (例如 girls_night -> "girls' night") */
+const label = sel => sel.options[sel.selectedIndex].text;
 function mockDesc(p){
-  return `For ${p.scene}, feeling ${p.mood}, a ${p.mbti} under ${p.zodiac} reaches for scent as a signature. `
+  return `For ${label(scene)}, feeling ${p.mood}, a ${p.mbti} under ${p.zodiac} reaches for scent as a signature. `
     +`The reading leans into warm, woody depth lit with a little spice \u2014 close to the skin, and unmistakably yours.`;
 }
 function mock(p){
@@ -344,12 +359,15 @@ async function run(){
   newList.innerHTML = (data.new&&data.new.length)
      ? data.new.map(x=>card(x,"match")).join("")
      : `<div class="empty">Widen your selection to see more.</div>`;
-  rsub.textContent = `${p.mbti} \u00B7 ${p.zodiac} \u00B7 ${p.scene} \u00B7 feeling ${p.mood}`;
+  rsub.textContent = `${p.mbti} \u00B7 ${p.zodiac} \u00B7 ${label(scene)} \u00B7 feeling ${p.mood}`;
   const res=document.getElementById("results");
   res.style.display="block"; res.scrollIntoView({behavior:"smooth"});
 }
 
 loadCatalog();   /* 页面加载即拉取品牌目录 */
+/* 页脚的香水数量: 从后端健康检查接口读取, 失败就保留默认文字 */
+if(API_BASE) fetch(API_BASE+"/").then(r=>r.json())
+  .then(d=>{ if(d.products) prodCount.textContent=d.products.toLocaleString("en-US"); }).catch(()=>{});
 </script>
 </body>
 </html>
